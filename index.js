@@ -1,17 +1,17 @@
 import express from "express";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
-import serverless from "serverless-http";
+import cors from "cors";
 
 dotenv.config();
-
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 const WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
 
 // route API
-app.post("/contact", async (req, res) => { 
+app.post("/api/contact", async (req, res) => { 
   const { name, email, message } = req.body;
 
   if (!name || !email || !message) {
@@ -33,5 +33,7 @@ app.post("/contact", async (req, res) => {
     return res.status(500).json({ success: false, error: "discord_error" });
   }
 });
-
-export default serverless(app);
+app.listen(process.env.PORT, () => {
+	console.info("l'api est lancée");
+});
+export default app;

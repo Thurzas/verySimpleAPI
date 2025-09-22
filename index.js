@@ -1,16 +1,17 @@
 import express from "express";
-import fetch from "node-fetch"; // npm install node-fetch
+import fetch from "node-fetch";
 import dotenv from "dotenv";
+import serverless from "serverless-http";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
-const PORT = process.env.PORT || 3001;
 
-const WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL; // ton URL webhook
+const WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
 
-app.post("/api/contact", async (req, res) => {
+// route API
+app.post("/contact", async (req, res) => { 
   const { name, email, message } = req.body;
 
   if (!name || !email || !message) {
@@ -26,11 +27,11 @@ app.post("/api/contact", async (req, res) => {
       }),
     });
 
-    res.json({ success: true });
+    return res.json({ success: true });
   } catch (err) {
     console.error("Erreur webhook Discord:", err);
-    res.status(500).json({ success: false, error: "discord_error" });
+    return res.status(500).json({ success: false, error: "discord_error" });
   }
 });
 
-app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
+export default serverless(app);

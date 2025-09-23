@@ -7,7 +7,7 @@ dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
-
+const port=4242;
 const WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
 
 // route API
@@ -33,7 +33,7 @@ app.post("/api/contact", async (req, res) => {
     return res.status(500).json({ success: false, error: "discord_error" });
   }
 });
-app.listen(process.env.PORT, () => {
+app.listen(port, () => {
 	console.info("l'api est lancée");
 });
 export default app;
